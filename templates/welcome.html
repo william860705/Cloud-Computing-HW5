@@ -1,0 +1,37 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static',filename='styles/style.css') }}">
+
+</head>
+
+<body>
+  <nav>
+    <h4></h4>
+    <ul>
+      {% if islogin %}
+      <li><a href="/welcome">Home</a></li>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/logout">Logout</a></li>
+      {% else %}
+      <li><a href="/welcome">Home</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+    <!-- <p>Click<a href='/'> here </a> to go home </p> -->
+
+    {% for message in get_flashed_messages() %}
+    {{ message}}
+  {% endfor%}
+  <script src="js/scripts.js"></script>
+</body>
+</html>

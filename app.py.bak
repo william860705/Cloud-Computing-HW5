@@ -1,0 +1,44 @@
+import os
+import flask
+from flask import request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+import database_helper as db_helper
+
+app = flask.Flask(__name__)
+# use sqlite for the time being
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+# @app.route('/')
+@app.route('/api/upload', methods=['POST'])
+def upload():
+    try:
+        response = {
+            'status': '200',
+            'success': True,
+            'message': 'file uploaded'
+        }
+        req = request.json
+        if 'title' in req and 'data' in req:
+            title = req['title']
+            path = f'./{title}.csv'
+            uniq = 1
+            while os.path.exists(path):
+                # In case there are duplicate file names
+                path = f'./{title}{uniq}.csv'
+                uniq += 1
+            with open(path, 'w') as f:
+                f.write(','.join(req['data'][0]))
+                for row in req['data'][1:]:
+                    f.write('\n' + ','.join(row))
+        else:
+            response['status'] = '400'
+            response['success'] = False
+            response['message'] = 'incorrect payload format or content'
+        return jsonify(response)
+    except:
+        return {'status': 500}
+
+if __name__ == "__main__":
+    app.run(debug=True)
